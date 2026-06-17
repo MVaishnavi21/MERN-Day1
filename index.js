@@ -1,11 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const User = require('./models/User');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected. Day 6 win.'))
@@ -18,6 +20,11 @@ app.get('/profile', (req, res) => {
 app.post('/profile', (req, res) => {
   const updated = { name: 'Vaishnavi', mission: 'Sakala Mission', day: 5, skills: ['Node.js', 'Git', 'JavaScript', 'Express', 'POST'], isShipping: true, ...req.body };
   res.json({ message: 'Profile updated', data: updated });
+});
+
+app.get('/users', async(req, res) => {
+  const users = await User.find();
+  res.json(users);
 });
 
 app.post('/users', async (req, res) => {
